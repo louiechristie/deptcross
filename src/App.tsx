@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import  React, { useState } from 'react';
 import './App.css';
 
 const App: React.FC = () => {
+
+  const [posts, updatePosts] = useState([]);
+
+  fetch(`http://test.local/wp-json/wp/v2/posts`)
+  .then((response)=> response.json())
+  .then((json)=> {
+    updatePosts(json);
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {posts && posts.map((post: any)=> {
+        // return <pre>{JSON.stringify(posts, null, "  ")}</pre>
+              return <>
+                <h2>{(post.title.rendered.toString())}</h2>
+
+                <p>{(post.content.rendered.toString())}</p>
+              
+              </>
+
+      })}
+
+      <hr />
+
+      <h2><pre>Debug section</pre></h2>
+
+      <pre>{JSON.stringify(posts, null, "  ")}</pre>
     </div>
   );
 }
